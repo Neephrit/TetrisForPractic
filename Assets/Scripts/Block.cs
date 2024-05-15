@@ -43,7 +43,7 @@ public class Block : MonoBehaviour
                 transform.position -= new Vector3(0, -1, 0);
                 _addToGrib();
                 _cheakLine();
-                _cheakHeight();
+                //_cheakHeight();
                 this.enabled = false;
                 FindAnyObjectByType<Spawner>().SpawnBloks();
             }
@@ -58,7 +58,7 @@ public class Block : MonoBehaviour
             if(_hasLine(i))
             {
                 _deleteLine(i);
-                Debug.Log("+10 score");
+                FindAnyObjectByType<GameManager>().AddScore(10);
                 _rowDown(i);
             }
         }
@@ -105,8 +105,14 @@ public class Block : MonoBehaviour
             int roundedX = Mathf.RoundToInt(children.position.x);
             int roundedY = Mathf.RoundToInt(children.position.y);
             grib[roundedX, roundedY] = children;
+
+            if (roundedY > 13)
+            {
+                FindAnyObjectByType<GameManager>().Dead();
+            }
         }
-     }
+        
+    }
     private bool validMove()
     {
         foreach(Transform children in transform)
@@ -120,11 +126,5 @@ public class Block : MonoBehaviour
                 return false;
         }
         return true;
-    }
-
-    private void _cheakHeight()
-    {
-        if (transform.position.y < 16 && !validMove())
-            Debug.Log("Dead");
     }
 }
